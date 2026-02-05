@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Cycle Radar — For Partners</title>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <style>
+  /* ===== tokens ===== */
+  :root{
+    --bg:#0b1220;            /* deep navy */
+    --card:#121826;          /* graphite */
+    --card-2:#0f1523;
+    --text:#e8eaf0;          /* off white */
+    --muted:#9aa3b2;
+    --accent:#0a84ff;        /* iOS blue */
+    --accent-2:#30d158;      /* iOS green */
+    --danger:#ff453a;        /* iOS red */
+    --warn:#ffd60a;          /* iOS yellow */
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+    --radius:22px;
+    --radius-sm:14px;
+    --ring: 0 0 0 8px rgba(10,132,255,.14);
+    --gap:14px;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f5f7fb; --card:#ffffff; --card-2:#f0f2f7; --text:#111318; --muted:#6b7280; --shadow:0 12px 34px rgba(16,24,40,.08); }
+    .input, select{ background:rgba(17,19,24,.02); border:1px solid rgba(17,19,24,.08); }
+    .pill, .btn.ghost{ background:rgba(17,19,24,.02); border:1px solid rgba(17,19,24,.08); }
+  }
+
+  /* ===== single scroll root / base ===== */
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  html{ overflow-y:scroll; scrollbar-gutter:stable both-edges; }
+  body{
+    margin:0;
+    overflow-y:auto;
+    color:var(--text);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(10,132,255,.18), transparent 60%),
+      radial-gradient(900px 480px at -10% 10%, rgba(48,209,88,.12), transparent 60%),
+      var(--bg);
+    background-attachment:fixed;
+    background-repeat:no-repeat;
+    background-size:cover;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    letter-spacing:.2px; line-height:1.45;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  }
+  /* prevent mobile 100vh jump if any wrapper uses it */
+  .fill-screen, .app, main, #app { min-height: 100dvh; }
+
+  /* ===== layout ===== */
+  .wrap{ max-width:1000px; margin:0 auto; padding:26px 18px 80px; }
+
+  /* header */
+  header{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:18px; }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .logo{ width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, rgba(10,132,255,.5), rgba(48,209,88,.45)); box-shadow:var(--shadow); display:grid; place-items:center; }
+  .logo svg{ filter:drop-shadow(0 4px 10px rgba(0,0,0,.25)); }
+  h1{ font-weight:700; font-size:22px; margin:0; }
+  .subtitle{ color:var(--muted); font-size:14px; }
+
+  /* cards */
+  .grid{ display:grid; grid-template-columns:repeat(12, 1fr); gap:var(--gap); }
+  .card{ grid-column:span 12; background:linear-gradient(180deg, var(--card), var(--card-2)); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; }
+  .card h2{ margin:0 0 8px; font-size:18px; }
+  .card .hint{ color:var(--muted); font-size:13px; }
+  @media (min-width:800px){
+    .span-4{grid-column:span 4}
+    .span-6{grid-column:span 6}
+    .span-8{grid-column:span 8}
+    .span-12{grid-column:span 12}
+  }
+
+  /* inputs */
+  .row{ display:flex; gap:10px; flex-wrap:wrap; }
+  label{ display:block; font-size:13px; color:var(--muted); margin-bottom:6px; }
+  .input, select, button{ appearance:none; outline:none; border:none; }
+  .input, select{
+    font-size:16px; padding:14px 16px; border-radius:18px;
+    background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14);
+    color:var(--text); backdrop-filter:saturate(120%) blur(6px);
+  }
+  .input:focus, select:focus{ box-shadow: inset 0 0 0 1px rgba(10,132,255,.6), var(--ring); }
+
+  .pill{
+    display:inline-flex; align-items:center; gap:10px; padding:10px 14px;
+    border-radius:999px; background:rgba(255,255,255,.06); box-shadow:none; border:none;
+  }
+  .pill .dot{ width:9px; height:9px; border-radius:50%; }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    padding:12px 16px; border-radius:14px;
+    background:linear-gradient(180deg, rgba(10,132,255,.85), rgba(10,132,255,.75));
+    color:#fff; font-weight:600; cursor:pointer;
+    box-shadow:0 8px 20px rgba(10,132,255,.35);
+    transition:transform .08s ease, box-shadow .2s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); box-shadow:0 10px 26px rgba(10,132,255,.45); }
+  .btn:active{ transform:translateY(0); }
+  .btn.ghost{ background:rgba(255,255,255,.06); color:var(--text); box-shadow:inset 0 0 0 1px rgba(255,255,255,.12); }
+  .btn.green{ background:linear-gradient(180deg, rgba(48,209,88,.9), rgba(48,209,88,.8)); box-shadow:0 8px 20px rgba(48,209,88,.35); }
+  .btn.red{ background:rgba(255,255,255,.06); color:var(--danger); box-shadow:inset 0 0 0 1px rgba(255,69,58,.45); }
+  .btn.red:hover{ background:rgba(255,255,255,.12); }
+
+  /* status */
+  .stat{ display:flex; align-items:center; gap:12px; }
+  .stat .value{ font-weight:800; font-size:28px; }
+  .stat .unit{ color:var(--muted); font-size:12px; }
+
+  /* calendar */
+  .cal{ width:100%; --cell:44px; }
+  .cal .title{ font-weight:700; }
+  .cal .grid{
+    display:grid; grid-template-columns:repeat(7, var(--cell)); gap:6px;
+    width:calc(var(--cell) * 7 + 6px * 6); margin:6px auto 0;
+  }
+  .dow{ color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.08em; text-align:center; }
+  .day{
+    width:var(--cell); height:var(--cell); border-radius:12px;
+    display:flex; align-items:center; justify-content:center; position:relative;
+    background:rgba(255,255,255,.04); box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+  }
+  .day.muted{ opacity:.35; }
+  .p{ background:rgba(255,69,58,.14); box-shadow:inset 0 0 0 1px rgba(255,69,58,.25); }
+  .f{ background:rgba(48,209,88,.16); box-shadow:inset 0 0 0 1px rgba(48,209,88,.25); }
+  .o{ background:rgba(10,132,255,.16); box-shadow:inset 0 0 0 1px rgba(10,132,255,.25); }
+
+  /* list */
+  .list{ display:flex; flex-direction:column; gap:10px; }
+  .rowi{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px; border-radius:14px; background:rgba(255,255,255,.06); border:none; box-shadow:none;
+  }
+  .rowi small{ color:var(--muted); }
+
+  /* footer */
+  footer{ margin-top:22px; color:var(--muted); font-size:12px; }
+  a{ color:var(--accent); }
+
+  /* chips */
+  .chips{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{ font-size:12px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.06); color:var(--text); }
+
+  .divider{ height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent); margin:12px -6px; }
+  .empty{ color:var(--muted); font-style:italic; }
+
+  /* info button + tooltip */
+  .info-btn{
+    display:inline-grid; place-items:center; width:22px; height:22px; border-radius:999px;
+    background:rgba(255,255,255,.10); color:var(--text); font-weight:700; font-size:12px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.14); cursor:pointer;
+    -webkit-appearance:none; appearance:none; border:1px solid transparent; outline:none;
+  }
+  .info-btn:hover{ box-shadow:inset 0 0 0 1px rgba(10,132,255,.6), var(--ring); }
+  .tooltip{
+    position:absolute; max-width:320px;
+    background:linear-gradient(180deg, var(--card), var(--card-2));
+    color:var(--text); padding:12px 14px; border-radius:14px; box-shadow:var(--shadow);
+    font-size:13px; z-index:9999; display:none;
+  }
+  .tooltip h4{ margin:0 0 6px; font-size:14px; }
+  .tooltip .muted{ color:var(--muted); font-size:12px; }
+
+  /* advanced toggle */
+  details#advPanel{ margin:6px 0; }
+  summary.adv-summary{
+    list-style:none; padding:6px 10px; border-radius:999px;
+    background:rgba(255,255,255,.06); box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+    color:var(--muted); font-weight:500; display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+  }
+  summary.adv-summary::-webkit-details-marker{ display:none; }
+  summary.adv-summary::before{
+    content:"›"; display:inline-block; transform:rotate(90deg); transition:transform .15s ease; opacity:.8;
+  }
+  details[open] > summary.adv-summary::before{ transform:rotate(270deg); }
+
+  /* buttons (focus + tap) */
+  .btn, .info-btn{ -webkit-tap-highlight-color:transparent; }
+  .btn:focus, .btn:focus-visible, .info-btn:focus, .info-btn:focus-visible{ outline:none; box-shadow:var(--ring); }
+  .btn.ghost{ background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); box-shadow:none; }
+
+  /* toggle */
+  .toggle{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:8px 12px; border-radius:999px;
+    background:rgba(255,255,255,.06); border:none; box-shadow:none; font-size:14px;
+  }
+  .toggle input{ width:18px; height:18px; accent-color:var(--accent); }
+
+  .smallmuted{ color:var(--muted); font-size:12px; }
+</style>
+
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <h1>Cycle Radar</h1>
+      </div>
+
+      <div class="chips">
+        <button class="btn" id="btnExportICS" title="Export to Calendar (.ics)">Export to Calendar</button>
+        <!-- Share icon button (popup handled by sync.js) -->
+        <button class="btn ghost" id="crShareIcon" title="Share / Join" aria-label="Share">
+          <!-- link icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M10 14l-1 1a4 4 0 01-6-6l3-3a4 4 0 016 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M14 10l1-1a4 4 0 116 6l-3 3a4 4 0 01-6 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Left column: Inputs/Settings -->
+      <section class="card span-4" aria-labelledby="settingsTitle">
+        <h2 id="settingsTitle">Setup</h2>
+        <div class="hint">All data stays on your device.</div>
+        <div class="divider"></div>
+
+        <div class="row">
+            <div style="flex:1 1 180px">
+            <label for="partnerName">Name</label>
+            <input id="partnerName" class="input" placeholder="Type"/>
+            </div>
+            <div style="flex:1 1 130px">
+            <label for="cycleLen">Typical cycle length</label>
+            <input id="cycleLen" class="input" type="number" min="15" max="60" value="28" />
+            </div>
+            <div style="flex:1 1 130px">
+            <label for="periodLen">Typical period length</label>
+            <input id="periodLen" class="input" type="number" min="1" max="10" value="5" />
+            </div>
+        </div>
+
+        <!-- Advanced moved BEFORE past period start; subtle, minimal padding -->
+        <details id="advPanel">
+            <summary class="adv-summary">Advanced</summary>
+            <div style="margin-top:8px; display:grid; grid-template-columns:1fr; gap:8px">
+            <div>
+                <label for="lutealLen">Luteal length (days)
+                <button type="button" class="info-btn" aria-label="About luteal length"
+                    onclick="openTip(event,'Luteal length','Time between ovulation and the next period. Commonly ~14 days (10–17 normal). Used to place ovulation before the predicted start.')">i</button>
+                </label>
+                <input id="lutealLen" class="input" type="number" min="10" max="17" value="14" />
+            </div>
+
+            <div>
+                <label for="lhDate">LH surge date (optional)
+                <button type="button" class="info-btn" aria-label="About LH"
+                    onclick="openTip(event,'LH surge date','Ovulation usually follows the LH surge by ~24–36 hours. If provided, the app sets ovulation ≈ LH + 1 day.')">i</button>
+                </label>
+                <input id="lhDate" class="input" type="date" />
+            </div>
+
+            <div>
+                <label for="bbtDate">BBT first high temp (optional)
+                <button type="button" class="info-btn" aria-label="About BBT"
+                    onclick="openTip(event,'BBT shift','The first sustained higher temperature typically occurs the day after ovulation. If provided, the app sets ovulation ≈ BBT − 1 day.')">i</button>
+                </label>
+                <input id="bbtDate" class="input" type="date" />
+            </div>
+            </div>
+        </details>
+
+        <div class="row" style="margin-top:10px; gap:8px; flex-wrap:wrap">
+          <button class="btn green" id="addDate">Add Date</button>
+          <button class="btn ghost" id="addCustom">Add Custom Alert</button>
+        </div>
+
+        <div class="divider"></div>
+        <div>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px">
+            <strong>Logged starts</strong>
+            <small id="cycleStats" class="hint"></small>
+            </div>
+            <div id="datesList" class="list"></div>
+            <div id="emptyDates" class="empty">No dates yet — add at least one start date.</div>
+        </div>
+
+        <div class="divider"></div>
+        <div>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px">
+            <strong>Custom alerts</strong>
+            <small class="hint">Anchored to a date or cycle event</small>
+          </div>
+          <div id="customList" class="list"></div>
+          <div id="emptyCustoms" class="empty">No custom alerts yet.</div>
+        </div>
+
+        </section>
+
+
+      <!-- Right column: Overview & Calendar -->
+      <section class="card span-8" aria-labelledby="overviewTitle">
+        <h2 id="overviewTitle">Overview</h2>
+        <div class="hint" id="overviewSub">Personalized from your entries.</div>
+        <div class="divider"></div>
+
+        <div class="row" style="flex-wrap:wrap; gap:12px">
+          <div class="pill" title="Confidence widens with irregular cycles">
+            <span class="dot" id="confDot" style="background:var(--accent)"></span>
+            <span id="confText">Confidence: —</span>
+            <button type="button" class="info-btn" aria-label="About confidence"
+              onclick="openTip(event,'Confidence','High: ≥2 logged cycle intervals with SD ≤2 days; Medium: SD 3–5; Low: SD >5 or fewer than 2 logged cycles. More entries/LH/BBT improves this.')">i</button>
+          </div>
+          <div class="pill">
+            <span class="dot" style="background:rgba(255,69,58,.8)"></span> Period window
+            <button type="button" class="info-btn" aria-label="About period window"
+              onclick="openTip(event,'Period window','Estimated start on the first day; window spans typical period length. Probability peaks on day 1 and tapers. Alerts available 5-day/1-day/day-of.')">i</button>
+          </div>
+          <div class="pill">
+            <span class="dot" style="background:rgba(48,209,88,.9)"></span> Fertile window
+            <button type="button" class="info-btn" aria-label="About fertile window"
+              onclick="openTip(event,'Fertile window','~5 days before ovulation through ovulation day. Without LH/BBT we center on (predicted start − luteal length).')">i</button>
+          </div>
+          <div class="pill">
+            <span class="dot" style="background:rgba(10,132,255,.9)"></span> Ovulation (likely)
+            <button type="button" class="info-btn" aria-label="About ovulation"
+              onclick="openTip(event,'Ovulation (likely)','If LH provided: ≈ LH + 1 day. If BBT provided: ≈ BBT − 1 day. Otherwise: predicted start − luteal length.')">i</button>
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:10px">
+          <div class="card span-6" style="padding:16px">
+            <div class="stat">
+              <div>
+                <div class="value" id="nextIn">—</div>
+                <div class="unit">days until predicted start</div>
+              </div>
+            </div>
+            <div class="hint" id="predictedDateText" style="margin-top:6px"></div>
+          </div>
+          <div class="card span-6" style="padding:16px">
+            <div class="stat">
+              <div>
+                <div class="value" id="fertileIn">—</div>
+                <div class="unit">days until fertile window</div>
+              </div>
+            </div>
+            <div class="hint" id="fertileDateText" style="margin-top:6px"></div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="grid" style="gap:12px">
+          <div class="span-12">
+            <div class="cal" id="calendar"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <div><strong>Heads up:</strong> predictions are estimates, not medical advice or birth control. Cycle variation is normal.</div>
+      <div>Made for partners. Private by design — everything stays in your browser.</div>
+    </footer>
+  </div>
+
+  <!-- Tooltip container -->
+  <div id="tip" class="tooltip" role="dialog" aria-modal="false"></div>
+
+  <script>
+    // -------------------
+    // Local persistence
+    // -------------------
+    const SKEY = 'cycleRadar.v2'; // bump key for new fields
+    const AKEY = 'cycleRadar.alerts.v1';
+    const CKEY = 'cycleRadar.custom.v1';   // custom alerts
+
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+    const state = loadState();
+    const alerts = loadAlerts();
+    const customs = loadCustoms();
+
+    function loadState(){
+      let s = localStorage.getItem(SKEY);
+      if(!s){
+        return { partnerName:'', cycleLen:28, periodLen:5, lutealLen:14, starts:[], lh:'', bbt:'' };
+      }
+      try{
+        const obj = JSON.parse(s);
+        // migrate if older key structure
+        if (obj.lh === undefined) obj.lh = '';
+        if (obj.bbt === undefined) obj.bbt = '';
+        if (obj.lutealLen === undefined) obj.lutealLen = 14;
+        return obj;
+      }catch{
+        return { partnerName:'', cycleLen:28, periodLen:5, lutealLen:14, starts:[], lh:'', bbt:'' };
+      }
+    }
+    function saveState(){ localStorage.setItem(SKEY, JSON.stringify(state)); }
+    function loadAlerts(){ try{ return JSON.parse(localStorage.getItem(AKEY)||'[]'); }catch{ return [] } }
+    function saveAlerts(){ localStorage.setItem(AKEY, JSON.stringify(alerts)); }
+    function loadCustoms(){ try{ return JSON.parse(localStorage.getItem(CKEY)||'[]'); }catch{ return [] } }
+    function saveCustoms(){ localStorage.setItem(CKEY, JSON.stringify(customs)); }
+
+    // -------------------
+    // Population Priors (from Kaggle-style datasets)
+    // -------------------
+    // NOTE: Replace these numbers with ones you compute from the dataset.
+    // These are sensible placeholders you can use now.
+    const PRIORS = {
+      cycleLen: { mean: 28, sd: 3.5 },      // average cycle length & spread
+      luteal:   { mean: 14, sd: 1.5 },      // luteal length distribution center
+      // Ovulation-relative fertility weights (days -5..+1 should sum ~1)
+      fertilityCurve: { "-5":0.07,"-4":0.12,"-3":0.18,"-2":0.24,"-1":0.26,"0":0.11,"1":0.02 }
+    };
+
+    // Simple Bayesian shrinkage toward priors.
+    // n = user intervals count; k = prior strength (acts like "virtual" samples).
+    function shrinkToPrior(userMean, userSD, n, priorMean, priorSD, k = 4){
+      // mean: weighted toward prior when n is small
+      const w = n / (n + k);
+      const mean = isFinite(userMean) ? (w * userMean + (1 - w) * priorMean) : priorMean;
+
+      // sd: if user sd is unstable with tiny n, blend it as well
+      let sd = priorSD;
+      if (isFinite(userSD)) {
+        const wsd = Math.min(1, Math.max(0, (n - 1) / (n - 1 + k)));
+        sd = wsd * userSD + (1 - wsd) * priorSD;
+      }
+      // guardrails
+      sd = Math.max(1, Math.min(sd, 10));
+      return { mean: Math.round(mean), sd: Math.round(sd) };
+    }
+
+    // -------------------
+    // Helpers
+    // -------------------
+    const fmt = new Intl.DateTimeFormat(undefined, {month:'long', day:'numeric', year:'numeric'});
+    const fmtMd = new Intl.DateTimeFormat(undefined, {month:'short', day:'numeric'});
+
+    function toISODate(d){ const z = new Date(d.getTime()); z.setHours(0,0,0,0); return z.toISOString().slice(0,10); }
+    function daysBetween(a,b){ const ms= toStart(b) - toStart(a); return Math.round(ms/86400000); }
+    function toStart(d){ const x=new Date(d); x.setHours(0,0,0,0); return x; }
+    function addDays(d, n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+    function addMonths(d, n){ const x=new Date(d); x.setMonth(x.getMonth()+n); return x }
+    function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate() }
+    function within(x, a, b){ const xs=toStart(x).getTime(); return xs>=toStart(a).getTime() && xs<=toStart(b).getTime(); }
+
+    function weightedAverage(vals){
+      if(vals.length===0) return NaN;
+      // newer cycles get higher weight (1..N)
+      const n = vals.length; let s=0, w=0; for(let i=0;i<n;i++){ const weight = i+1; s += vals[i]*weight; w += weight; }
+      return s/w;
+    }
+    function stdev(vals){ if(vals.length<2) return 0; const m = vals.reduce((a,b)=>a+b,0)/vals.length; const v = vals.reduce((a,b)=>a+(b-m)*(b-m),0)/(vals.length-1); return Math.sqrt(v); }
+
+    // ---------- Confidence scoring (1–10) ----------
+    function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+    function mean(a){ return a.length? a.reduce((s,x)=>s+x,0)/a.length : 0; }
+    function stdevS(a){
+    if(a.length<2) return 0;
+    const m = mean(a);
+    return Math.sqrt(a.reduce((s,x)=>s+(x-m)*(x-m),0)/(a.length-1));
+    }
+
+    /**
+     * score in [1..10]
+     * Inputs:
+     *  - n: number of cycle intervals
+     *  - avg: average length (days)
+     *  - sd: stdev over all intervals (days)
+     *  - lastK: last K intervals (recent variability)
+     */
+    function confidenceScore10(intervals, avg, sd){
+    const n = intervals.length;
+
+    // 1) Data volume: saturates as n grows (0 at 0, ~0.78 at n=5, ~0.91 at n=8)
+    const vol = 1 - Math.exp(-n/4);
+
+    // 2) Variability (coefficient of variation): 0 => best, higher => worse.
+    // We treat cv ~ 0.1–0.2 as normal; above that, confidence drops.
+    const cv = avg>0 ? sd/avg : 1;
+    const varOK = Math.exp(-(cv/0.15));  // cv=0.15 -> ~0.37 ; cv=0.1 -> ~0.51 ; cv=0.2 -> ~0.26
+
+    // 3) Recent wobble: if recent stdev >> overall stdev, penalize.
+    const K = Math.min(3, n); // look at last up to 3 intervals
+    const recent = K>0 ? intervals.slice(-K) : [];
+    const sdRecent = stdevS(recent);
+    const wobbleRatio = (sd>0 ? (sdRecent - sd)/sd : 0);
+    const recentPenalty = Math.max(0, wobbleRatio); // only penalize if recent got worse
+
+    // 4) Outliers: fraction of intervals that are >2*sd from mean (if sd>0)
+    let outFrac = 0;
+    if (sd>0 && n>0){
+        const m = mean(intervals);
+        const bad = intervals.filter(x => Math.abs(x - m) > 2*sd).length;
+        outFrac = bad / n; // 0..1
+    }
+
+    // Weighted blend (tuned for intuitive behavior)
+    let raw =
+        0.55*vol         // more data matters most
+        + 0.45*varOK       // but consistency matters a lot too
+        - 0.25*recentPenalty
+        - 0.20*outFrac;
+
+    raw = clamp01(raw);
+
+    // With <2 intervals, cap optimism
+    if (n < 2) raw = Math.min(raw, 0.25);
+
+    // Map to 1..10
+    const score = Math.max(1, Math.min(10, Math.round(1 + 9*raw)));
+    return { score, details: { n, avg, sd, cv:+cv.toFixed(3), sdRecent:+sdRecent.toFixed(2), outFrac:+outFrac.toFixed(2) } };
+    }
+
+    function scoreToLabel(score){
+    if (score >= 8) return 'High';
+    if (score >= 5) return 'Medium';
+    return 'Low';
+    }
+
+    // -------------------
+    // Model (with LH/BBT + confidence fix)
+    // -------------------
+    function computeModel(){
+
+    // ---- Baseline averages (with priors) ----
+    const starts = [...state.starts].sort(); // ISO yyyy-mm-dd
+    const intervals = [];
+    for (let i = 1; i < starts.length; i++){
+      intervals.push(daysBetween(new Date(starts[i-1]), new Date(starts[i])));
+    }
+
+    // user-only stats
+    const userAvg = intervals.length ? Math.round(weightedAverage(intervals)) : NaN;
+    let userSD = Math.round(stdev(intervals)) || 0;
+
+    // Blend toward population priors when history is light/variable
+    const priorAvg  = PRIORS.cycleLen.mean;
+    const priorSD   = PRIORS.cycleLen.sd;
+    const { mean: avg, sd } = shrinkToPrior(userAvg, userSD, intervals.length, priorAvg, priorSD, 4);
+
+    // Keep n handy for confidence calc later
+    const n = intervals.length;
+
+
+    // ---- Confidence score (1–10) combining data volume + variability + recent wobble + outliers ----
+    // Data volume (0..~1): rises with more intervals
+    const vol = 1 - Math.exp(-n/4);
+
+    // Variability via coefficient of variation (cv = sd/avg)
+    const baseAvg = avg || Number(state.cycleLen || 28);
+    const cv = baseAvg > 0 ? sd / baseAvg : 1;
+    const varOK = Math.exp(-(cv / 0.15));  // lower cv -> closer to 1
+
+    // Recent wobble: compare last up to 3 intervals vs overall sd
+    const K = Math.min(3, n);
+    const recent = K > 0 ? intervals.slice(-K) : [];
+    const sdRecent = recent.length >= 2 ? stdev(recent) : 0;
+    const wobbleRatio = (sd > 0 ? (sdRecent - sd) / sd : 0);
+    const recentPenalty = Math.max(0, wobbleRatio); // only penalize if recent got worse
+
+    // Outliers: share of intervals > 2*sd from mean (only if sd>0)
+    let outFrac = 0;
+    if (sd > 0 && n > 0){
+        const m = intervals.reduce((s,x)=>s+x,0)/n;
+        const bad = intervals.filter(x => Math.abs(x - m) > 2*sd).length;
+        outFrac = bad / n;
+    }
+
+    // Blend
+    let raw =
+        0.55 * vol       // more data helps
+        + 0.45 * varOK     // consistency helps
+        - 0.25 * recentPenalty
+        - 0.20 * outFrac;
+
+    // Clamp and guard when little data
+    raw = Math.max(0, Math.min(1, raw));
+    if (n < 2) {
+        // With <2 intervals, keep optimism capped and widen windows a bit
+        raw = Math.min(raw, 0.25);
+        if (sd === 0) sd = 6;
+    }
+
+    const confScore = Math.max(1, Math.min(10, Math.round(1 + 9*raw)));
+    const confLabel = confScore >= 8 ? 'High' : confScore >= 5 ? 'Medium' : 'Low';
+
+    // ---- Forward predictions ----
+    const last = starts.length ? new Date(starts[starts.length - 1] + 'T12:00:00') : new Date();
+    const nextStart = addDays(last, avg || 28);
+
+    const periodLen = Number(state.periodLen || 5);
+    const luteal = Number(state.lutealLen || 14);
+
+    // Base ovulation from calendar math
+    let ovu = addDays(nextStart, -luteal);
+
+    // Advanced signal overrides
+    if (state.lh){ // LH surge -> ovulation ~ +1 day
+        const lhD = new Date(state.lh + 'T12:00:00');
+        if (!isNaN(lhD)) ovu = addDays(lhD, +1);
+    }
+    if (state.bbt){ // first high temp -> ovulation ~ previous day
+        const bbtD = new Date(state.bbt + 'T12:00:00');
+        if (!isNaN(bbtD) && !state.lh) {
+        ovu = addDays(bbtD, -1); // LH takes priority if both exist
+        }
+    }
+
+    const fertileStart = addDays(ovu, -5);
+    const fertileEnd   = addDays(ovu, +1);
+
+    return {
+        // History stats
+        avg, sd, cycleLengths: intervals,
+
+        // Confidence (numeric + label) and details for optional debugging/tooltip
+        confScore,                 // 1..10
+        confLabel,                 // 'Low' | 'Medium' | 'High'
+        confDetails: {
+        n, avgBase: baseAvg, sdAll: sd, cv: +cv.toFixed(3),
+        sdRecent: +sdRecent.toFixed(2), outlierFrac: +outFrac.toFixed(2)
+        },
+
+        // Key dates
+        last, nextStart, periodLen, luteal,
+        ovu, fertileStart, fertileEnd
+    };
+    }
+
+    // -------------------
+    // UI Bindings
+    // -------------------
+    const partnerName = $('#partnerName');
+    const cycleLen = $('#cycleLen');
+    const periodLen = $('#periodLen');
+    const lutealLen = $('#lutealLen');
+    const lhDate = $('#lhDate');
+    const bbtDate = $('#bbtDate');
+    const datesList = $('#datesList');
+    const emptyDates = $('#emptyDates');
+    const cycleStats = $('#cycleStats');
+    const confDot = $('#confDot');
+    const confText = $('#confText');
+    const nextIn = $('#nextIn');
+    const fertileIn = $('#fertileIn');
+    const predictedDateText = $('#predictedDateText');
+    const fertileDateText = $('#fertileDateText');
+    const calendar = $('#calendar');
+
+    partnerName.value = state.partnerName||'';
+    cycleLen.value = state.cycleLen;
+    periodLen.value = state.periodLen;
+    lutealLen.value = state.lutealLen;
+    if(state.lh) lhDate.value = state.lh;
+    if(state.bbt) bbtDate.value = state.bbt;
+
+    partnerName.addEventListener('input', ()=>{ state.partnerName=partnerName.value.trim(); saveState(); refreshAll(); });
+    cycleLen.addEventListener('input', ()=>{ state.cycleLen = Number(cycleLen.value||28); saveState(); refreshAll(); });
+    periodLen.addEventListener('input', ()=>{ state.periodLen = Number(periodLen.value||5); saveState(); refreshAll(); });
+    lutealLen.addEventListener('input', ()=>{ state.lutealLen = Number(lutealLen.value||14); saveState(); refreshAll(); });
+    lhDate.addEventListener('input', ()=>{ state.lh = lhDate.value || ''; saveState(); refreshAll(); });
+    bbtDate.addEventListener('input', ()=>{ state.bbt = bbtDate.value || ''; saveState(); refreshAll(); });
+
+    $('#addDate').addEventListener('click', openAddDateModal);
+    $('#addCustom').addEventListener('click', openAddCustomModal);
+
+    function refreshDatesList(){
+      datesList.innerHTML='';
+      // clean any old "more" wrapper
+      const oldMore = document.getElementById('datesMoreWrap');
+      if (oldMore) oldMore.remove();
+
+      if(!state.starts.length){
+        emptyDates.style.display='block';
+        cycleStats.textContent='';
+        return;
+      }
+
+      emptyDates.style.display='none';
+
+      // Sort newest → oldest
+      const starts = [...state.starts].sort().reverse();
+
+      const makeRow = (iso) => {
+        const d = new Date(iso+'T12:00:00');
+        const row = document.createElement('div');
+        row.className = 'rowi';
+
+        const left = document.createElement('div');
+        left.innerHTML = `
+          <strong>${d.toLocaleDateString(undefined, {month:'short', day:'numeric'})}</strong>
+          <div><small>${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getDate().toString().padStart(2,'0')}/${d.getFullYear()}</small></div>
+        `;
+
+        const right = document.createElement('div');
+        const btn = document.createElement('button');
+        btn.className = 'btn red';
+        btn.textContent = 'Remove';
+        btn.addEventListener('click', ()=>{
+          const idx = state.starts.indexOf(iso);
+          if (idx > -1) {
+            state.starts.splice(idx,1);
+            saveState();
+            refreshAll();
+          }
+        });
+
+        right.appendChild(btn);
+        row.appendChild(left);
+        row.appendChild(right);
+        return row;
+      };
+
+      // Show newest two
+      const topTwo = starts.slice(0,2);
+      topTwo.forEach(iso => datesList.appendChild(makeRow(iso)));
+
+      // If more exist, add centered dropdown like “Advanced”
+      const rest = starts.slice(2);
+      if (rest.length){
+        const wrap = document.createElement('div');
+        wrap.id = 'datesMoreWrap';
+
+        const details = document.createElement('details');
+        details.id = 'datesMore';
+
+        const summary = document.createElement('summary');
+        summary.className = 'adv-summary';
+        summary.textContent = `Show ${rest.length} more`;
+        details.appendChild(summary);
+
+        const moreList = document.createElement('div');
+        moreList.className = 'list';
+        rest.forEach(iso => moreList.appendChild(makeRow(iso)));
+        details.appendChild(moreList);
+
+        datesList.parentElement.appendChild(wrap);
+        wrap.appendChild(details);
+
+        details.addEventListener('toggle', ()=>{
+          summary.textContent = details.open ? 'Show less' : `Show ${rest.length} more`;
+        });
+      }
+
+      // Stats
+      const m = computeModel();
+      const {cycleLengths} = m;
+      cycleStats.textContent = cycleLengths.length
+        ? `Avg ${m.avg}d • SD ${m.sd}d • ${cycleLengths.length} cycles`
+        : 'Not enough history yet';
+    }
+
+    function refreshCustomList(){
+      const list = document.getElementById('customList');
+      const empty = document.getElementById('emptyCustoms');
+      list.innerHTML = '';
+
+      if(!customs.length){
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      const anchorLabel = (c)=>{
+        if(c.baseType === 'date') return new Date(c.baseDate+'T12:00:00').toLocaleDateString();
+        if(c.baseEvent === 'period') return 'Predicted Period Start';
+        if(c.baseEvent === 'fertile') return 'Fertile Window Begins';
+        if(c.baseEvent === 'ovulation') return 'Ovulation (likely)';
+        return 'Unknown';
+      };
+      const offsetLabel = (c)=>{
+        const dir = c.offset>=0 ? 'after' : 'before';
+        const val = Math.abs(c.offset);
+        const u = c.unit === 'hours' ? 'hour' : 'day';
+        return `${val} ${u}${val!==1?'s':''} ${dir}`;
+      };
+      const timeLabel = (c)=>{
+        if(c.unit === 'days') return '(all-day)';
+        return c.time || '09:00';
+      };
+
+      customs.forEach(c=>{
+        const row = document.createElement('div');
+        row.className = 'rowi';
+
+        const left = document.createElement('div');
+        left.innerHTML = `
+          <strong>${c.title||'Untitled'}</strong>
+          <div class="smallmuted">${offsetLabel(c)} • ${anchorLabel(c)} • ${timeLabel(c)}</div>
+        `;
+
+        const right = document.createElement('div');
+        right.style.display='flex';
+        right.style.gap='8px';
+
+        const lbl = document.createElement('label');
+        lbl.className = 'toggle';
+        lbl.innerHTML = `<input type="checkbox" ${c.enabled!==false?'checked':''}> Enabled`;
+        lbl.querySelector('input').addEventListener('change', (e)=>{ c.enabled = e.target.checked; saveCustoms(); });
+
+        const del = document.createElement('button');
+        del.className = 'btn red';
+        del.textContent = 'Remove';
+        del.addEventListener('click', ()=>{
+          const idx = customs.findIndex(x=>x.id===c.id);
+          if(idx>-1){ customs.splice(idx,1); saveCustoms(); refreshCustomList(); }
+        });
+
+        right.appendChild(lbl);
+        right.appendChild(del);
+
+        row.appendChild(left);
+        row.appendChild(right);
+        list.appendChild(row);
+      });
+    }
+
+    function openAddCustomModal(){
+      const overlay = document.createElement('div');
+      overlay.style.cssText = `
+        position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:100000;
+        display:flex; align-items:center; justify-content:center; padding:16px;
+      `;
+      const modal = document.createElement('div');
+      modal.className = 'card';
+      modal.style.cssText = `max-width:520px; width:100%; border-radius:18px; padding:16px; box-shadow:var(--shadow);`;
+
+      const todayISO = toISODate(new Date());
+      const id = crypto.randomUUID();
+
+      modal.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:12px">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <h3 style="margin:0;font-size:18px">Add custom alert</h3>
+            <button class="btn ghost" id="crCloseCustom">Close</button>
+          </div>
+
+          <div>
+            <label>Title</label>
+            <input id="c_title" class="input" placeholder="e.g., Anniversary Reminder"/>
+          </div>
+
+          <div class="row" style="gap:10px; flex-wrap:wrap">
+            <div style="flex:1 1 180px">
+              <label>Anchor</label>
+              <select id="c_anchor" class="input">
+                <option value="period">Predicted Period Start</option>
+                <option value="fertile">Fertile Window Begins</option>
+                <option value="ovulation">Ovulation (likely)</option>
+                <option value="date">Specific Date…</option>
+              </select>
+            </div>
+            <div style="flex:1 1 180px; display:none" id="c_date_wrap">
+              <label>Pick a date</label>
+              <input id="c_date" class="input" type="date" value="${todayISO}"/>
+            </div>
+          </div>
+
+          <div class="row" style="gap:10px; flex-wrap:wrap">
+            <div style="flex:1 1 140px">
+              <label>Offset</label>
+              <div class="row" style="gap:8px">
+                <select id="c_dir" class="input" style="flex:0 0 120px">
+                  <option value="+">After</option>
+                  <option value="-">Before</option>
+                </select>
+                <input id="c_amount" class="input" type="number" min="0" step="1" placeholder="0" style="flex:1 1 80px"/>
+                <select id="c_unit" class="input" style="flex:0 0 120px">
+                  <option value="days">days</option>
+                  <option value="hours">hours</option>
+                </select>
+              </div>
+              <div class="smallmuted" id="c_hint">Days → all-day calendar entry</div>
+            </div>
+
+            <div style="flex:1 1 140px; display:none" id="c_time_wrap">
+              <label>Time of day (for hours offsets)</label>
+              <input id="c_time" class="input" type="time" value="09:00"/>
+            </div>
+          </div>
+
+          <div class="row" style="gap:8px; justify-content:flex-end">
+            <button class="btn ghost" id="crCancelCustom">Cancel</button>
+            <button class="btn green" id="crSaveCustom">Save</button>
+          </div>
+        </div>
+      `;
+
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+
+      const close = ()=> overlay.remove();
+      modal.querySelector('#crCloseCustom').addEventListener('click', close);
+      modal.querySelector('#crCancelCustom').addEventListener('click', close);
+
+      // show/hide date picker based on anchor
+      const anchorSel = modal.querySelector('#c_anchor');
+      const dateWrap = modal.querySelector('#c_date_wrap');
+      const unitSel  = modal.querySelector('#c_unit');
+      const timeWrap = modal.querySelector('#c_time_wrap');
+      const hintEl   = modal.querySelector('#c_hint');
+
+      function syncAnchor(){
+        const v = anchorSel.value;
+        dateWrap.style.display = (v==='date') ? 'block' : 'none';
+      }
+      function syncUnit(){
+        const v = unitSel.value;
+        timeWrap.style.display = (v==='hours') ? 'block' : 'none';
+        hintEl.textContent = v==='days' ? 'Days → all-day calendar entry' : 'Hours → timed calendar entry';
+      }
+      anchorSel.addEventListener('change', syncAnchor);
+      unitSel.addEventListener('change', syncUnit);
+      syncAnchor(); syncUnit();
+
+      modal.querySelector('#crSaveCustom').addEventListener('click', ()=>{
+        const title = modal.querySelector('#c_title').value.trim() || 'Custom Alert';
+        const baseType = anchorSel.value === 'date' ? 'date' : 'model';
+        const baseEvent = (anchorSel.value === 'date') ? null : anchorSel.value; // 'period'|'fertile'|'ovulation'
+        const baseDate = (anchorSel.value === 'date') ? modal.querySelector('#c_date').value : null;
+
+        const dir = modal.querySelector('#c_dir').value === '-' ? -1 : +1;
+        const amount = Math.max(0, Number(modal.querySelector('#c_amount').value||0));
+        const unit = modal.querySelector('#c_unit').value;     // 'days'|'hours'
+        const time = unit==='hours' ? (modal.querySelector('#c_time').value || '09:00') : null;
+
+        const obj = { id, title, baseType, baseEvent, baseDate, offset: dir*amount, unit, time, enabled:true };
+        customs.push(obj);
+        saveCustoms();
+        refreshCustomList();
+        close();
+      });
+
+      overlay.addEventListener('click', (e)=>{ if(e.target===overlay) close(); });
+    }
+
+    // -------------------
+    // Overview
+    // -------------------
+    function refreshOverview(){
+      const m = computeModel();
+      const now = new Date();
+      const pIn = Math.max(0, daysBetween(now, toStart(m.nextStart)));
+      nextIn.textContent = isFinite(pIn)? pIn : '—';
+      const flexWindow = Math.max(1, Math.round(Math.max(1,m.sd)));
+      predictedDateText.textContent = `Predicted start: ${fmt.format(m.nextStart)}  · Window ±${flexWindow} days`;
+
+      const fIn = Math.max(0, daysBetween(now, toStart(m.fertileStart)));
+      fertileIn.textContent = isFinite(fIn)? fIn : '—';
+      fertileDateText.textContent = `Fertile: ${fmtMd.format(m.fertileStart)}–${fmtMd.format(m.fertileEnd)}  · Ovulation ~ ${fmtMd.format(m.ovu)}`;
+
+      confText.textContent = `Confidence: ${m.confScore}/10 (${m.confLabel})`;
+        confDot.style.background = m.confLabel==='High'
+        ? 'var(--accent-2)'
+        : m.confLabel==='Medium'
+            ? 'var(--accent)'
+            : 'var(--warn)';
+
+      const name = state.partnerName? `${state.partnerName}'s cycle` : 'Personalized from your entries';
+      $('#overviewSub').textContent = name;
+    }
+
+    // -------------------
+    // Tap-only tooltips for days (from earlier request)
+    // -------------------
+    let openTipKey = null;
+    function confScale(conf){ return conf==='High'? 1.0 : conf==='Medium'? 0.8 : 0.6; }
+    function percent(n){ return Math.round(n*100); }
+    function dayCategoryAndProb(date, m){
+      const cf = confScale(m.confLabel);
+
+      // Period window: center on nextStart, taper across periodLen
+      if (within(date, m.nextStart, addDays(m.nextStart, m.periodLen - 1))){
+        const k = daysBetween(m.nextStart, date);
+        // Heavier weight on day 1, quickly tapering (normalized-ish)
+        const weights = [0.50, 0.25, 0.15, 0.07, 0.03, 0.02, 0.01];
+        const base = (k < weights.length ? weights[k] : 0.01);
+        return { kind:'Period window', prob: Math.min(0.9, base * cf), title:'Period day (predicted)' };
+      }
+
+      // Fertile window: use prior curve keyed by offset from ovulation
+      if (within(date, m.fertileStart, m.fertileEnd)){
+        const offset = String(daysBetween(date, m.ovu) * -1); // e.g., "-2"
+        const table = PRIORS.fertilityCurve || { "-5":0.08,"-4":0.12,"-3":0.18,"-2":0.24,"-1":0.30,"0":0.25,"1":0.10 };
+        const base = table[offset] ?? 0.08;
+        return { kind:'Fertile window', prob: Math.min(0.9, base * cf), title:'Fertile day' };
+      }
+
+      return { kind:'None', prob: 0.0, title:'No specific event' };
+    }
+
+    function contentForDate(date, m){
+      if (sameDay(date, m.ovu)){
+        const cf = confScale(m.confLabel);
+        const ovProb = (m.confLabel==='High'? 0.40 : m.confLabel==='Medium'? 0.30 : 0.20) * cf;
+        return `<h4>Ovulation (likely)</h4><div>${date.toDateString()}<br>Approx. <strong>${percent(ovProb)}%</strong> chance</div>`;
+      }
+      const info = dayCategoryAndProb(date, m);
+      if (info.kind === 'None'){
+        return `<h4>${info.title}</h4><div>${date.toDateString()}</div>`;
+      }
+      return `<h4>${info.title}</h4><div>${date.toDateString()}<br>${info.kind} · Approx. <strong>${percent(info.prob)}%</strong> chance</div>`;
+    }
+    function placeTipBelowCell(cell){
+    // close any prior tip/listeners
+    if (tipCleanup) tipCleanup();
+
+    tip.style.display = 'block';
+
+    const r = cell.getBoundingClientRect();
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+    const scrollX = window.scrollX || document.documentElement.scrollLeft;
+    const tipW = Math.min(320, tip.offsetWidth || 320);
+    const margin = 6;
+
+    let left = r.left + scrollX;
+    left = Math.max(8 + scrollX, Math.min(left, scrollX + window.innerWidth - tipW - 8));
+    const top = r.bottom + scrollY + margin;
+
+    tip.style.position = 'absolute';
+    tip.style.left = `${left}px`;
+    tip.style.top  = `${top}px`;
+
+    // dismissal handlers
+    const onScroll = () => cleanup();
+    const onResize = () => cleanup();
+    const closer = (e) => {
+        if (!tip.contains(e.target) && e.target !== cell) cleanup();
+    };
+
+    window.addEventListener('scroll', onScroll);
+    document.addEventListener('scroll', onScroll, true); // catch scrolls in any container
+    window.addEventListener('resize', onResize);
+    setTimeout(() => document.addEventListener('click', closer), 0);
+
+    function cleanup(){
+        tip.style.display = 'none';
+        window.removeEventListener('scroll', onScroll);
+        document.removeEventListener('scroll', onScroll, true);
+        window.removeEventListener('resize', onResize);
+        document.removeEventListener('click', closer);
+        openTipKey = null;
+        tipCleanup = null;
+    }
+    tipCleanup = cleanup;
+    }
+
+    function toggleDayTip(cell, date, m){
+      const key = toISODate(date);
+
+      // If you tapped the same day again, just close it
+      if (openTipKey === key){
+        if (tipCleanup) tipCleanup();
+        openTipKey = null;
+        return;
+      }
+
+      // Otherwise switch to the new day
+      if (tipCleanup) tipCleanup();
+      tip.innerHTML = contentForDate(date, m);
+      placeTipBelowCell(cell);
+      openTipKey = key;
+    }
+
+    function sizeCalendarCells(){
+    const cal = document.getElementById('calendar');     // <div class="cal" id="calendar">
+    if (!cal) return;
+
+    // Measure the card content width that the grid must fit inside
+    const card = cal.closest('.card') || cal;
+    const style = getComputedStyle(card);
+    const padX = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+    const contentWidth = card.clientWidth - padX;
+
+    const cols = 7;
+    const gap = 6;
+    const available = contentWidth - gap * (cols - 1);
+
+    // Floor so rounding never pushes it over by 1px on iOS Safari
+    let cell = Math.floor(available / cols);
+
+    // Keep it readable on tiny phones / not huge on desktop
+    cell = Math.max(34, Math.min(cell, 64));
+
+    // Apply
+    cal.style.setProperty('--cell', cell + 'px');
+    }
+
+    // -------------------
+    // Calendar (current + next month) — TAP only
+    // -------------------
+    function buildCalendar(){
+      const m = computeModel();
+      const months = [0,1].map(offset => addMonths(new Date(), offset));
+      calendar.innerHTML='';
+
+      months.forEach((monthDate)=>{
+        const section = document.createElement('section'); section.style.marginBottom='18px';
+        const head = document.createElement('div'); head.className='row'; head.style.justifyContent='space-between'; head.style.alignItems='center';
+        const title = document.createElement('div'); title.className='title'; title.textContent = monthDate.toLocaleString(undefined, {month:'long', year:'numeric'});
+        head.appendChild(title); section.appendChild(head);
+
+        const grid = document.createElement('div'); grid.className='grid';
+        ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{
+          const el = document.createElement('div'); el.className='dow'; el.textContent=d; grid.appendChild(el);
+        });
+
+        const first = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
+        const last  = new Date(monthDate.getFullYear(), monthDate.getMonth()+1, 0);
+        const startOffset = first.getDay();
+        const daysInMonth = last.getDate();
+
+        for(let i=0;i<startOffset;i++){
+          const x=document.createElement('div'); x.className='day muted'; grid.appendChild(x);
+        }
+
+        for(let d=1; d<=daysInMonth; d++){
+          const date = new Date(monthDate.getFullYear(), monthDate.getMonth(), d);
+          const cell = document.createElement('div'); cell.className='day'; cell.textContent = d;
+
+          // probability shading
+            const info = dayCategoryAndProb(date, m);
+
+            if (info.kind === 'Period window') {
+            const alpha = Math.max(0.1, info.prob); // 0.0–0.9 → use as opacity
+            cell.style.background = `rgba(255,69,58,${alpha})`;
+            }
+            if (info.kind === 'Fertile window') {
+            const alpha = Math.max(0.1, info.prob);
+            cell.style.background = `rgba(48,209,88,${alpha})`;
+            }
+            if (sameDay(date, m.ovu)) {
+            const alpha = 0.8; // ovulation gets strong highlight
+            cell.style.background = `rgba(10,132,255,${alpha})`;
+            }
+
+          cell.addEventListener('click', ()=> toggleDayTip(cell, date, m));
+          grid.appendChild(cell);
+        }
+
+        section.appendChild(grid);
+        calendar.appendChild(section);
+      });
+    }
+
+    function openAddDateModal(){
+      // Overlay
+      const overlay = document.createElement('div');
+      overlay.id = 'crAddDateOverlay';
+      overlay.style.cssText = `
+        position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:100000;
+        display:flex; align-items:center; justify-content:center; padding:16px;
+      `;
+
+      // Modal card
+      const modal = document.createElement('div');
+      modal.className = 'card';
+      modal.style.cssText = `
+        max-width:420px; width:100%; border-radius:18px; padding:16px;
+        box-shadow: var(--shadow);
+      `;
+
+      const todayISO = toISODate(new Date());
+      const yISO = toISODate(addDays(new Date(), -1));
+
+      modal.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:12px">
+          <div style="display:flex; align-items:center; justify-content:flex-start;">
+            <h3 style="margin:0;font-size:18px">Add period start</h3>
+          </div>
+
+          <div>
+            <label for="crNewDate" style="display:block; margin-bottom:6px; color:var(--muted)">Pick a date</label>
+            <input id="crNewDate" class="input" type="date" max="${todayISO}" value="${todayISO}" />
+          </div>
+
+          <div class="row" style="gap:8px; flex-wrap:wrap">
+            <button class="btn ghost" id="crToday">Today</button>
+            <button class="btn ghost" id="crYesterday">Yesterday</button>
+          </div>
+
+          <div class="row" style="gap:8px; justify-content:flex-end">
+            <button class="btn ghost" id="crCancelAdd">Cancel</button>
+            <button class="btn green" id="crConfirmAdd">Add</button>
+          </div>
+        </div>
+      `;
+
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+
+      // Helpers
+      const close = ()=> overlay.remove();
+      const input = modal.querySelector('#crNewDate');
+      const confirm = ()=> {
+        const iso = input.value;
+        if(!iso) { alert('Pick a date'); return; }
+        if(state.starts.includes(iso)) { alert('That date is already logged.'); return; }
+        state.starts.push(iso);
+        state.starts.sort();
+        saveState();
+        refreshAll();
+        close();
+      };
+
+      // Wire up (no close button anymore)
+      modal.querySelector('#crCancelAdd').addEventListener('click', close);
+      modal.querySelector('#crConfirmAdd').addEventListener('click', confirm);
+      modal.querySelector('#crToday').addEventListener('click', ()=>{ input.value = todayISO; });
+      modal.querySelector('#crYesterday').addEventListener('click', ()=>{ input.value = yISO; });
+
+      // Close on click-away
+      overlay.addEventListener('click', (e)=>{ if (e.target === overlay) close(); });
+
+      // Keyboard niceties
+      input.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter') { e.preventDefault(); confirm(); }
+        if(e.key === 'Escape') close();
+      });
+
+      // Focus the picker
+      input.focus();
+    }
+
+    function resolveCustomDate(c){
+        const m = computeModel();
+        let anchor = null;
+        if(c.baseType === 'date'){
+          anchor = new Date((c.baseDate||toISODate(new Date()))+'T00:00:00');
+        }else{
+          if(c.baseEvent === 'period') anchor = toStart(m.nextStart);
+          else if(c.baseEvent === 'fertile') anchor = toStart(m.fertileStart);
+          else if(c.baseEvent === 'ovulation') anchor = toStart(m.ovu);
+        }
+        if(!anchor || isNaN(anchor)) return null;
+
+        if(c.unit === 'days'){
+          // return an all-day date (we’ll add 00:00 and ICS handles all-day)
+          return addDays(anchor, c.offset||0);
+        }else{
+          // hours → specific time
+          const d = new Date(anchor);
+          const [hh,mm] = (c.time||'09:00').split(':').map(x=>parseInt(x,10));
+          d.setHours(hh||9, mm||0, 0, 0);
+          d.setHours(d.getHours() + (c.offset||0));
+          return d;
+        }
+      }
+
+    // -------------------
+    // ICS Export
+    // -------------------
+    $('#btnExportICS').addEventListener('click', openExportModal);
+
+    function openExportModal(){
+  // —— Overlay (fixed) ——
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:100000;
+    display:flex; align-items:center; justify-content:center; padding:16px;
+  `;
+
+  // Lock background scroll
+  const prevOverflow = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
+
+  // —— Modal shell ——
+  const modal = document.createElement('div');
+  modal.className = 'card';
+  modal.style.cssText = `
+    max-width:560px; width:100%;
+    border-radius:18px; padding:0;  /* we'll pad inner */
+    box-shadow:var(--shadow);
+    display:flex; flex-direction:column; max-height:80vh;
+  `;
+
+  // Header + scrollable middle + fixed footer
+  modal.innerHTML = `
+    <div style="
+      display:flex;
+      flex-direction:column;
+      height:100%;
+      background:linear-gradient(180deg,#f5f5f7,#e5e5ea);
+      border-radius:18px;
+      overflow:hidden
+    ">
+      <!-- Top bar -->
+      <div style="padding:16px 16px 0; position:sticky; top:0; background:transparent; z-index:1">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <h3 style="margin:0;font-size:18px">Export to calendar</h3>
+          <button class="btn ghost" id="exClose">Close</button>
+        </div>
+        <div class="smallmuted" style="margin-top:8px">Choose which items to export as calendar events.</div>
+        <div class="divider" style="margin-top:12px"></div>
+      </div>
+
+      <!-- Middle scroll -->
+      <div id="ex_scroll" style="overflow:auto; padding:0 16px; flex:1; min-height:120px; background:transparent">
+        <div style="font-weight:600; margin:12px 0 6px">Built-in alerts</div>
+        <div id="ex_builtins" class="list">
+          <label class="pill" style="justify-content:flex-start">
+            <input type="checkbox" id="ex_al5" checked style="accent-color:var(--accent); width:18px; height:18px">
+            <span style="margin-left:8px">~5 days until period (all-day)</span>
+          </label>
+          <label class="pill" style="justify-content:flex-start">
+            <input type="checkbox" id="ex_al1" checked style="accent-color:var(--accent); width:18px; height:18px">
+            <span style="margin-left:8px">Tomorrow: period may start (all-day)</span>
+          </label>
+          <label class="pill" style="justify-content:flex-start">
+            <input type="checkbox" id="ex_al0" checked style="accent-color:var(--accent); width:18px; height:18px">
+            <span style="margin-left:8px">Today: period may start (all-day)</span>
+          </label>
+          <label class="pill" style="justify-content:flex-start">
+            <input type="checkbox" id="ex_alF" checked style="accent-color:var(--accent); width:18px; height:18px">
+            <span style="margin-left:8px">Fertile window begins (all-day)</span>
+          </label>
+          <label class="pill" style="justify-content:flex-start">
+            <input type="checkbox" id="ex_alO" checked style="accent-color:var(--accent); width:18px; height:18px">
+            <span style="margin-left:8px">Ovulation likely today (all-day)</span>
+          </label>
+        </div>
+
+        <!-- Custom alerts will be injected here if any exist -->
+        <div id="ex_customs_host"></div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div style="position:sticky; bottom:0; background:transparent; padding:12px 16px; z-index:1">
+        <div class="divider" style="margin:-12px -16px 12px"></div>
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+          <button class="btn ghost" id="exCancel">Cancel</button>
+          <button class="btn green" id="exDownload">Export .ics</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  const close = ()=>{
+    overlay.remove();
+    // restore background scroll
+    document.body.style.overflow = prevOverflow || '';
+  };
+
+  modal.querySelector('#exClose').addEventListener('click', close);
+  modal.querySelector('#exCancel').addEventListener('click', close);
+
+  // Prevent wheel/touch scrolling from leaking to the page when user hits overlay gap
+  overlay.addEventListener('wheel', (e)=>{ if(e.target === overlay){ e.preventDefault(); } }, {passive:false});
+  overlay.addEventListener('touchmove', (e)=>{ if(e.target === overlay){ e.preventDefault(); } }, {passive:false});
+  overlay.addEventListener('click', (e)=>{ if(e.target===overlay) close(); });
+
+  // ----- Inject Custom Alerts (checkboxes) if any exist -----
+  if (Array.isArray(customs) && customs.length){
+    const host = modal.querySelector('#ex_customs_host');
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+      <div class="divider" style="margin:12px 0"></div>
+      <div style="font-weight:600; margin-bottom:6px">Custom alerts</div>
+      <div id="ex_customs" class="list"></div>
+    `;
+    host.replaceWith(wrap);
+    const exList = wrap.querySelector('#ex_customs');
+
+    customs.forEach(c=>{
+      const row = document.createElement('label');
+      row.className = 'pill';
+      row.style.justifyContent = 'flex-start';
+      row.innerHTML = `
+        <input type="checkbox" id="ex_c_${c.id}" ${c.enabled!==false?'checked':''}
+               style="accent-color:var(--accent); width:18px; height:18px">
+        <span style="margin-left:8px">
+          ${c.title ? escapeHtml(c.title) : 'Custom'}
+          <span class="smallmuted"> — ${c.unit==='days'?'all-day':'timed'}</span>
+        </span>
+      `;
+      exList.appendChild(row);
+    });
+  }
+
+  // ----- Download handler -----
+  modal.querySelector('#exDownload').addEventListener('click', ()=>{
+    // no more "calendar name" field
+    const name = (state && state.partnerName) ? `${state.partnerName} · Cycle Radar` : 'Cycle Radar';
+
+    // Collect built-in selections
+    const opts = {
+      al5: modal.querySelector('#ex_al5').checked,
+      al1: modal.querySelector('#ex_al1').checked,
+      al0: modal.querySelector('#ex_al0').checked,
+      alF: modal.querySelector('#ex_alF').checked,
+      alO: modal.querySelector('#ex_alO').checked
+    };
+
+    // Build the event plan (includes any selected customs inside)
+    const plan = buildPlanForExport(opts);
+    if (!plan.length){
+      alert('No events to export. Try selecting more items or adjusting your cycle dates.');
+      return;
+    }
+
+    // Generate ICS text and download
+    const ics = makeICS(plan, name);
+    const blob = new Blob([ics], {type:'text/calendar;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const safe = 'Cycle_Radar';
+    a.href = url;
+    a.download = `${safe}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{
+      URL.revokeObjectURL(url);
+      a.remove();
+      close();
+    }, 0);
+  });
+
+  // helper
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+}
+
+    // Build plan from options (no on-page list anymore)
+    function buildPlanForExport(opts){
+      const m = computeModel();
+      const plan=[];
+      const nine = (d)=>{ const x = toStart(d); x.setHours(9,0,0,0); return x };
+
+      // Built-ins (future-ish only)
+      if(opts.al5){ const d = addDays(nine(m.nextStart), -5); if(d > addDays(new Date(), -1)) plan.push({title:'~5 days until period', when:d, allDay:true}); }
+      if(opts.al1){ const d = addDays(nine(m.nextStart), -1); if(d > addDays(new Date(), -1)) plan.push({title:'Tomorrow: period may start', when:d, allDay:true}); }
+      if(opts.al0){ const d = nine(m.nextStart); if(d > addDays(new Date(), -1)) plan.push({title:'Today: period may start', when:d, allDay:true}); }
+      if(opts.alF){ const d = nine(m.fertileStart); if(d > addDays(new Date(), -1)) plan.push({title:'Fertile window begins', when:d, allDay:true}); }
+      if(opts.alO){ const d = nine(m.ovu); if(d > addDays(new Date(), -1)) plan.push({title:'Ovulation likely today', when:d, allDay:true}); }
+
+      // Customs selected in export modal
+      const box = document.getElementById('ex_customs');
+      if(box){
+        customs.forEach(c=>{
+          const cb = document.getElementById(`ex_c_${c.id}`);
+          if(cb && cb.checked){
+            const dt = resolveCustomDate(c);
+            if(dt && dt > addDays(new Date(), -1)){
+              plan.push({
+                title: c.title || 'Custom Alert',
+                when: dt,
+                allDay: (c.unit === 'days')  // days → all-day; hours → timed
+              });
+            }
+          }
+        });
+      }
+      return plan;
+    }
+
+    function pad(n){ return n<10? '0'+n : ''+n }
+    function toUTCStamp(d){
+      const z = new Date(d.getTime());
+      return `${z.getUTCFullYear()}${pad(z.getUTCMonth()+1)}${pad(z.getUTCDate())}T${pad(z.getUTCHours())}${pad(z.getUTCMinutes())}${pad(z.getUTCSeconds())}Z`;
+    }
+    function yyyymmdd(d){
+  const y = d.getFullYear();
+  const m = pad(d.getMonth()+1);
+  const day = pad(d.getDate());
+  return `${y}${m}${day}`;
+}
+
+function makeICS(events, name){
+  const now = new Date();
+  let out = '';
+  out += 'BEGIN:VCALENDAR\n';
+  out += 'VERSION:2.0\n';
+  out += 'PRODID:-//Cycle Radar//EN\n';
+  out += 'CALSCALE:GREGORIAN\n';
+  out += 'METHOD:PUBLISH\n';
+
+  events.forEach((e)=>{
+    const when = e.when instanceof Date ? e.when : new Date(e.when);
+
+    out += 'BEGIN:VEVENT\n';
+    out += `UID:${crypto.randomUUID()}@cycleradar\n`;
+    out += `DTSTAMP:${toUTCStamp(now)}\n`;
+
+    if(e.allDay){
+      const startYMD = yyyymmdd(when);
+      const endYMD   = yyyymmdd(addDays(when, 1)); // non-inclusive
+      out += `DTSTART;VALUE=DATE:${startYMD}\n`;
+      out += `DTEND;VALUE=DATE:${endYMD}\n`;
+    }else{
+      out += `DTSTART:${toUTCStamp(when)}\n`;
+      out += `DTEND:${toUTCStamp(new Date(when.getTime()+30*60*1000))}\n`;
+    }
+
+    out += `SUMMARY:${escapeICS(e.title)}\n`;
+    out += `DESCRIPTION:${escapeICS(name)}\n`;
+
+    out += 'BEGIN:VALARM\n';
+    out += 'ACTION:DISPLAY\n';
+    out += e.allDay ? 'TRIGGER;RELATED=START:PT8H\n' : 'TRIGGER:PT0S\n';
+    out += `DESCRIPTION:${escapeICS(e.title)}\n`;
+    out += 'END:VALARM\n';
+
+    out += 'END:VEVENT\n';
+  });
+
+  out += 'END:VCALENDAR\n';
+  return out;
+}
+
+
+    function escapeICS(s){ return (s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;') }
+
+    // -------------------
+    // Tooltip logic (for info buttons + day tips)
+    // -------------------
+    const tip = document.getElementById('tip');
+    let tipCleanup = null;  // removes old listeners + hides tip
+    function openTip(ev, title, text){
+        // stop the old tip + listeners if any
+        if (tipCleanup) tipCleanup();
+
+        // prevent this click from triggering any existing document click-away
+        ev.stopPropagation();
+
+        tip.innerHTML = `<h4>${title}</h4><div>${text}</div>`;
+        tip.style.display = 'block';
+
+        // place directly under the clicked element
+        const r = ev.currentTarget.getBoundingClientRect();
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        const scrollX = window.scrollX || document.documentElement.scrollLeft;
+        const tipW = Math.min(320, tip.offsetWidth || 320);
+        const margin = 6;
+
+        let left = r.left + scrollX;
+        left = Math.max(8 + scrollX, Math.min(left, scrollX + window.innerWidth - tipW - 8));
+        const top = r.bottom + scrollY + margin;
+
+        tip.style.position = 'absolute';
+        tip.style.left = `${left}px`;
+        tip.style.top  = `${top}px`;
+
+        // listeners (close on scroll/resize/click-away)
+        const onScroll = () => cleanup();
+        const onResize = () => cleanup();
+        const closer = (e) => {
+            if (!tip.contains(e.target) && e.target !== ev.currentTarget) cleanup();
+        };
+
+        window.addEventListener('scroll', onScroll);
+        document.addEventListener('scroll', onScroll, true); // capture scrolls anywhere
+        window.addEventListener('resize', onResize);
+        setTimeout(() => document.addEventListener('click', closer), 0);
+
+        function cleanup(){
+            tip.style.display = 'none';
+            window.removeEventListener('scroll', onScroll);
+            document.removeEventListener('scroll', onScroll, true);
+            window.removeEventListener('resize', onResize);
+            document.removeEventListener('click', closer);
+            tipCleanup = null;
+        }
+
+        // expose cleanup for the next info-tap
+        tipCleanup = cleanup;
+        }
+
+    // -------------------
+    // Initial render
+    // -------------------
+    function refreshAll(){
+      refreshDatesList();
+      refreshCustomList();
+      refreshOverview();
+      buildCalendar();
+    }
+    refreshAll();
+
+    // make calendar cells auto-size to card
+    sizeCalendarCells();   // run once immediately
+
+    const calRO = new ResizeObserver(sizeCalendarCells);
+    calRO.observe(document.getElementById('calendar'));
+    window.addEventListener('orientationchange', sizeCalendarCells);
+    window.addEventListener('resize', sizeCalendarCells);
+
+  </script>
+<script type="module" src="/sync.js?v=9"></script>
+</body>
+</html>
